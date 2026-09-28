@@ -1,0 +1,7 @@
+LabSlot centrifuge policy for equipment centrifuge-07.
+[C1] Rotor speed must not exceed 12000 rpm.
+[C2] Biohazardous, radioactive, explosive, and unknown materials are prohibited.
+[C3] Every run must name a trained observer who remains present during acceleration and spin.
+[C4] The protocol must include rotor balance verification before start.
+[C5] The protocol must include surface decontamination and a signed handoff after the run.
+

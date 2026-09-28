@@ -1,0 +1,10 @@
+.next/
+node_modules/
+.env
+.env.local
+artifacts/
+__pycache__/
+*.pyc
+.pytest_cache/
+.chrome-qa*/
+.edge-qa*/

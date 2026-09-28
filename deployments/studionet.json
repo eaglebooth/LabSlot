@@ -1,0 +1,10 @@
+{
+  "status": "LIVE_VERIFIED",
+  "network": "studionet",
+  "chainId": 61999,
+  "contractAddress": "0x4ccED926c9b2B9DE080cFAAFA85585153daCf88A",
+  "deploymentTransaction": "",
+  "source": "contracts/lab_slot.py",
+  "sourceCommit": "",
+  "frontendUrl": ""
+}

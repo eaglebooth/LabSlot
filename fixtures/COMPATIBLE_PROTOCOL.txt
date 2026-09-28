@@ -1,0 +1,2 @@
+Experiment protocol for centrifuge-07. The run uses sealed non-hazardous saline samples at 9000 rpm. Researcher wallet holder commits that no biohazardous, radioactive, explosive, or unknown material will be introduced. A trained observer will remain present during acceleration and spin. Rotor balance will be verified before start. After the run, the rotor and work surface will be decontaminated and the equipment will receive a signed handoff.
+

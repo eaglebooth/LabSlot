@@ -1,0 +1,2 @@
+Experiment protocol for centrifuge-07. Samples will be spun at 14000 rpm. A trained observer will remain present and rotor balance will be verified. Surface decontamination and a signed handoff will be completed after the run.
+
