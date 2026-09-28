@@ -12,6 +12,7 @@ Status: **LIVE LIFECYCLE VERIFIED — 2026-09-28**
 | Deploy transaction | Not supplied; the address was independently read before testing |
 | Verified schema | `LabSlot` / `semantic-batch-scheduler-v1` / version `1` |
 | Runner header | v0.2.16 / pinned dependency |
+| Production frontend | [`labslot-three.vercel.app`](https://labslot-three.vercel.app) |
 
 Pre-test authoritative readback returned zero facilities, rounds, requests and allocations. The test wallets were separate auxiliary wallets; the deployer did not perform an application role.
 
@@ -64,6 +65,12 @@ Assessment transaction [`0x50f0…76cd`](https://explorer-studio.genlayer.com/tx
 | Clear recovered round | [`0xefd7…4054`](https://explorer-studio.genlayer.com/tx/0xefd70baa00bcd9cbc16eb6e1166e3a08726214ab2501778b319be1e33a334054) | `NO_MATCH`, no winner |
 
 Final global readback after the audit: `allocated=1`, `facilities=5`, `requests=4`, `rounds=5`. The only allocation remains the prior compatible happy path.
+
+## Production frontend verification
+
+Vercel production deployment `dpl_61SwKr8U6Jwis7PrNzWP43z3A143` completed successfully and was aliased to [`https://labslot-three.vercel.app`](https://labslot-three.vercel.app). Headless Chrome verified the production page title `LabSlot | Semantic equipment scheduling`, 14 successful page/asset requests, and zero console warnings or errors. The checked request log and full-page production screenshot are stored in `docs/production-network.json` and `docs/screenshots/labslot-production.png`.
+
+The UI success gate requires all of the following before displaying `VERIFIED`: finalized status, accepted consensus, explicit successful leader execution, no execution-error receipt, successful contract readback, and the exact expected state transition for the selected operation. Recovery actions apply the same rule and cannot report success when readback fails.
 
 ## Scope of the proof
 

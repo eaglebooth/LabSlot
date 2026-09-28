@@ -6,5 +6,5 @@
   "deploymentTransaction": "",
   "source": "contracts/lab_slot.py",
   "sourceCommit": "",
-  "frontendUrl": ""
+  "frontendUrl": "https://labslot-three.vercel.app"
 }

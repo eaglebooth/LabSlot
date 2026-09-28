@@ -2,6 +2,9 @@
 
 LabSlot lets a facility operator allocate an equipment slot only after GenLayer validators establish that a different wallet's revealed experiment protocol semantically satisfies the exact policy revision frozen for that booking round.
 
+- Production: https://labslot-three.vercel.app
+- StudioNet contract: https://explorer-studio.genlayer.com/address/0x4ccED926c9b2B9DE080cFAAFA85585153daCf88A
+
 ## Scope
 
 | Demonstrated | Not claimed |
@@ -79,5 +82,5 @@ The frontend waits for `FINALIZED`, checks consensus/execution fields and re-rea
 
 ## Current readiness
 
-The contract schema and version were read from StudioNet and a fresh two-wallet lifecycle plus two rejection controls completed on 2026-09-28. See `docs/LIVE_STUDIONET_EVIDENCE.md` for direct explorer links and authoritative readbacks. A hosted frontend URL and repository commit remain separate publication gates.
+The contract schema and version were read from StudioNet; a fresh two-wallet lifecycle and adversarial audit completed on 2026-09-28. The production frontend is deployed and its public page, assets and network behavior were browser-tested. See `docs/LIVE_STUDIONET_EVIDENCE.md` for direct explorer links and authoritative readbacks.
 
