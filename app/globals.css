@@ -45,6 +45,9 @@ main { min-height: 100vh; overflow: hidden; }
 .brand small, .micro, .eyebrow { font-size: 9px; letter-spacing: .18em; font-weight: 800; }
 .network { border: 1px solid var(--line); padding: 9px 14px; border-radius: 99px; font-size: 10px; letter-spacing: .12em; display: flex; align-items: center; gap: 7px; }
 .network svg { color: var(--teal); }
+.network span { color: #9b6b25; }
+.network.connected span { color: var(--teal); }
+.network.error span { color: #b43f32; }
 .wallet { justify-self: end; border: 0; border-radius: 99px; background: var(--ink); color: white; padding: 12px 17px; display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; cursor: pointer; }
 
 .hero {
@@ -85,6 +88,13 @@ main { min-height: 100vh; overflow: hidden; }
   gap: 12px;
   box-shadow: var(--shadow);
 }
+.contract-strip { max-width: 1320px; margin: -8px auto 22px; border: 1px solid var(--line); border-left: 4px solid #c99040; background: #fffdf8; display: grid; grid-template-columns: 1.35fr 1fr 1fr; }
+.contract-strip.connected { border-left-color: var(--teal); }
+.contract-strip.error { border-left-color: #b43f32; }
+.contract-strip > div { padding: 14px 18px; min-width: 0; border-right: 1px solid var(--line); display: grid; gap: 5px; }
+.contract-strip > div:last-child { border-right: 0; }
+.contract-strip span { font: 9px/1.2 "Courier New", monospace; letter-spacing: .14em; color: var(--muted); }
+.contract-strip a, .contract-strip b { color: var(--ink); font-size: 12px; overflow-wrap: anywhere; display: flex; align-items: center; gap: 5px; }
 .identity-strip > *, .triple > *, .work-area > * { min-width: 0; }
 .identity-strip label, .field { display: flex; flex-direction: column; gap: 7px; }
 .identity-strip label > span, .field > span { font-size: 9px; letter-spacing: .14em; font-weight: 900; color: rgba(19, 45, 43, .65); }
@@ -180,6 +190,8 @@ footer a { display: flex; align-items: center; gap: 5px; }
   .identity-strip { margin-inline: 18px; grid-template-columns: 1fr 1fr; }
   .sync { min-height: 42px; }
   .instrument-console, .ledger { margin-inline: 18px; }
+  .contract-strip { margin-inline: 18px; grid-template-columns: 1fr; }
+  .contract-strip > div { border-right: 0; border-bottom: 1px solid var(--line); }
   .ledger { grid-template-columns: repeat(2, 1fr); }
   .ledger-title { grid-column: 1 / -1; }
 }

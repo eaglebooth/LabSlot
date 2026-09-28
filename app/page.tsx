@@ -7,7 +7,7 @@ import {
   Radio, RefreshCw, ScanSearch, ShieldCheck, TimerReset, Wallet,
 } from "lucide-react";
 import { connectWallet, currentAccount, readJson, watchWallet, writeContract, type Encodable } from "@/lib/chain";
-import { defaultContract, explorer } from "@/lib/network";
+import { contractExplorer, defaultContract, explorer } from "@/lib/network";
 
 type ChainState = Record<string, unknown>;
 type Mode = "register" | "open" | "commit" | "reveal" | "close" | "assess" | "clear";
@@ -75,17 +75,47 @@ export default function Home() {
   const [facility, setFacility] = useState<ChainState | null>(null);
   const [round, setRound] = useState<ChainState | null>(null);
   const [request, setRequest] = useState<ChainState | null>(null);
+  const [contractInfo, setContractInfo] = useState<ChainState | null>(null);
+  const [stats, setStats] = useState<ChainState | null>(null);
+  const [contractHealth, setContractHealth] = useState("CHECKING");
   const [txState, setTxState] = useState("IDLE");
   const [txHash, setTxHash] = useState("");
   const [error, setError] = useState("");
 
   const set = (key: string, value: string) => setForm(previous => ({ ...previous, [key]: value }));
 
+  const checkContract = useCallback(async () => {
+    if (!contract) throw new Error("Contract address is required");
+    setContractHealth("CHECKING");
+    try {
+      const [version, globalStats] = await Promise.all([
+        readJson(contract, "get_contract_version"),
+        readJson(contract, "get_stats"),
+      ]);
+      if (text(version.name) !== "LabSlot" || text(version.schema) !== "semantic-batch-scheduler-v1" || count(version.version) !== 1) {
+        throw new Error("Address is not the reviewed LabSlot v1 contract");
+      }
+      setContractInfo(version);
+      setStats(globalStats);
+      setContractHealth("CONNECTED");
+    } catch (cause) {
+      setContractInfo(null);
+      setStats(null);
+      setContractHealth("ERROR");
+      throw cause;
+    }
+  }, [contract]);
+
   const sync = useCallback(async (quiet = false) => {
-    if (!contract || !form.operator) throw new Error("Contract address and operator are required for readback");
+    if (!contract) throw new Error("Contract address is required for readback");
     if (!quiet) setTxState("READING");
     setError("");
     try {
+      await checkContract();
+      if (!form.operator) {
+        if (!quiet) setTxState("SYNCED");
+        return;
+      }
       const facilityState = await readJson(contract, "get_facility", [form.operator, form.facilityId]);
       setFacility(facilityState);
       const roundState = await readJson(contract, "get_round", [form.operator, form.facilityId, form.roundId]);
@@ -98,7 +128,7 @@ export default function Home() {
       if (!quiet) setTxState("ERROR");
       throw cause;
     }
-  }, [contract, form.operator, form.facilityId, form.roundId, form.requestId]);
+  }, [contract, form.operator, form.facilityId, form.roundId, form.requestId, checkContract]);
 
   useEffect(() => {
     currentAccount().then(setAccount).catch(() => undefined);
@@ -110,6 +140,13 @@ export default function Home() {
       setTxState("WALLET_CHANGED");
     });
   }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      checkContract().catch(cause => setError(cause instanceof Error ? cause.message : String(cause)));
+    }, 250);
+    return () => window.clearTimeout(timer);
+  }, [checkContract]);
 
   const operatorConnected = Boolean(account && form.operator && account.toLowerCase() === form.operator.toLowerCase());
   const requestOwner = Boolean(account && account.toLowerCase() === text(request?.researcher).toLowerCase());
@@ -218,7 +255,9 @@ export default function Home() {
         <Image src="/labslot-logo.png" alt="LabSlot calendar and laboratory flask" width={44} height={44} priority />
         <span><b>LABSLOT</b><small>SEMANTIC EQUIPMENT SCHEDULER</small></span>
       </a>
-      <div className="network"><Radio size={13}/> STUDIONET <b>61999</b></div>
+      <a className={`network ${contractHealth.toLowerCase()}`} href={contract ? contractExplorer(contract) : undefined} target="_blank" rel="noreferrer">
+        <Radio size={13}/> STUDIONET <b>61999</b><span>{contractHealth}</span>
+      </a>
       <button className="wallet" onClick={async () => {
         try { setAccount(await connectWallet()); } catch (cause) { setError(cause instanceof Error ? cause.message : String(cause)); }
       }}><Wallet size={17}/>{account ? short(account) : "CONNECT WALLET"}</button>
@@ -242,6 +281,12 @@ export default function Home() {
       <label><span>FACILITY OPERATOR</span><input value={form.operator} onChange={event => set("operator", event.target.value)} placeholder="0x operator wallet"/></label>
       <label><span>FACILITY / ROUND / REQUEST</span><div className="triple"><input value={form.facilityId} onChange={event => set("facilityId", event.target.value)}/><input value={form.roundId} onChange={event => set("roundId", event.target.value)}/><input value={form.requestId} onChange={event => set("requestId", event.target.value)}/></div></label>
       <button className="sync" onClick={() => sync()}><RefreshCw size={16}/> SYNC CHAIN</button>
+    </section>
+
+    <section className={`contract-strip ${contractHealth.toLowerCase()}`}>
+      <div><span>LIVE CONTRACT</span><a href={contract ? contractExplorer(contract) : undefined} target="_blank" rel="noreferrer">{contract || "Not configured"} <ArrowUpRight size={14}/></a></div>
+      <div><span>VERIFIED SCHEMA</span><b>{text(contractInfo?.schema) || "Checking StudioNet…"}</b></div>
+      <div><span>ON-CHAIN TOTALS</span><b>{count(stats?.facilities)} facilities · {count(stats?.rounds)} rounds · {count(stats?.allocated)} allocated</b></div>
     </section>
 
     <section className="instrument-console">
